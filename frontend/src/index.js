@@ -1,17 +1,24 @@
-import 'bootstrap/dist/css/bootstrap.css';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter } from 'react-router-dom';
-import App from './App';
-import registerServiceWorker from './registerServiceWorker';
+import './index.css';
+import App from './components/App';
+import * as serviceWorker from './serviceWorker';
+import { createStore, applyMiddleware } from 'redux';
+import thunkMiddleware from 'redux-thunk';
+import middlewareLogger from './middleware/middleware-logger';
+import reducer from "./reducers/national-parks-reducer";
+import { Provider } from "react-redux";
 
-const baseUrl = document.getElementsByTagName('base')[0].getAttribute('href');
-const rootElement = document.getElementById('root');
+const store = createStore(reducer, applyMiddleware(thunkMiddleware, middlewareLogger));
 
 ReactDOM.render(
-  <BrowserRouter basename={baseUrl}>
+  <Provider store={store}>
     <App />
-  </BrowserRouter>,
-  rootElement);
+  </Provider>,
+  document.getElementById('root')
+);
 
-registerServiceWorker();
+// If you want your app to work offline and load faster, you can change
+// unregister() to register() below. Note this comes with some pitfalls.
+// Learn more about service workers: https://bit.ly/CRA-PWA
+serviceWorker.unregister();
